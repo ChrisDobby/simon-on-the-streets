@@ -6,9 +6,7 @@ open Elmish.React
 open Fable.Helpers.React
 open Fable.Helpers.React.Props
 
-open Client.Messages
-
-open Client.Styles
+open Messages
 
 type Model = {
   Page: Page
@@ -26,8 +24,8 @@ let show = function
 | None -> "Loading..."
 
 let view model dispatch =
-  div [Style flex]
-    [ Client.Header.view ]
+  div [Style Styles.flex]
+    [ Header.view ]
 
   
 #if DEBUG

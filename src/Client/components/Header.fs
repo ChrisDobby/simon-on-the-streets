@@ -1,4 +1,4 @@
-module Client.Header
+module Header
 
 open Fable.Helpers.React
 open Fable.Helpers.React.Props

@@ -1,4 +1,4 @@
-module Client.Messages
+module Messages
 
 type Page = 
     | Home
