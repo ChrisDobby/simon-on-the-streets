@@ -90,10 +90,17 @@ Target "Bundle" (fun _ ->
   |> CopyFiles clientDir 
 )
 
-let dockerUser = "safe-template"
-let dockerImageName = "safe-template"
+let dockerUser = getBuildParam "DockerUser"
+let dockerPassword = getBuildParam "DockerPassword"
+let dockerLoginServer = getBuildParam "DockerLoginServer"
+let dockerImageName = getBuildParam "DockerImageName"
 
 let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
+
+printf "user: %s" dockerUser
+printf "password: %s" dockerPassword
+printf "server: %s" dockerLoginServer
+printf "image: %s" dockerImageName
 
 Target "Docker" (fun _ ->
   let buildArgs = sprintf "build -t %s ." dockerFullName
@@ -103,12 +110,29 @@ Target "Docker" (fun _ ->
   run "docker" tagArgs "."
 )
 
+Target "Deploy" (fun _ ->
+    let result =
+        ExecProcess (fun info ->
+            info.FileName <- "docker"
+            info.WorkingDirectory <- deployDir
+            info.Arguments <- sprintf "login %s --username \"%s\" --password \"%s\"" dockerLoginServer dockerUser dockerPassword) TimeSpan.MaxValue
+    if result <> 0 then failwith "Docker login failed"
+
+    let result =
+        ExecProcess (fun info ->
+            info.FileName <- "docker"
+            info.WorkingDirectory <- deployDir
+            info.Arguments <- sprintf "push %s/%s" dockerUser dockerImageName) TimeSpan.MaxValue
+    if result <> 0 then failwith "Docker push failed"
+)
+
 "Clean"
   ==> "InstallDotNetCore"
   ==> "InstallClient"
   ==> "Build"
   ==> "Bundle"
   ==> "Docker"
+  ==> "Deploy"
 
 "InstallClient"
   ==> "RestoreServer"
