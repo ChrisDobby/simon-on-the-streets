@@ -5,9 +5,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Shared\Domain.fs" />
-    <Compile Include="Messages.fs" />
+    <Compile Include="Pages.fs" />
     <Compile Include="styles/Styles.fs" />
     <Compile Include="components/Header.fs" />
+    <Compile Include="pages/Home.fs" />
+    <Compile Include="Views.fs" />
     <Compile Include="Client.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
