@@ -3,7 +3,7 @@ module Db.InMemory.Data
 open Domain
 open System
 
-let mutable contacts : Contact list = []
+let mutable contacts : RegisteredContact list = []
 
 let getContacts () = contacts
 
@@ -22,8 +22,13 @@ let nextId () =
         | [] -> 1
         | _ -> (contacts |> List.map(fun reg -> reg.Id) |> List.max) + 1
 
-let addContact (contact: ContactRequest) = 
-    let newContact = { Id = nextId(); Name = contact.Name; Registered = DateTime.Now }
+let addContact (contact: Contact) = 
+    let newContact = 
+        { 
+            Id = nextId()
+            Registered = DateTime.Now
+            Contact = contact
+        }
     contacts <- newContact::contacts
 
     newContact

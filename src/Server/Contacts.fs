@@ -7,7 +7,7 @@ open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Logging
 open System.Threading.Tasks
 
-let getAllContacts (getContactsFromDB: unit -> Task<Contact list>) next (ctx: HttpContext) =
+let getAllContacts (getContactsFromDB: unit -> Task<RegisteredContact list>) next (ctx: HttpContext) =
     task {
         try
             let! contacts = getContactsFromDB ()
@@ -18,7 +18,7 @@ let getAllContacts (getContactsFromDB: unit -> Task<Contact list>) next (ctx: Ht
             return! SERVICE_UNAVAILABLE "Database not available" next ctx
     }
 
-let getContact (getContactFromDb: int -> Task<Option<Contact>>) id next (ctx: HttpContext) = 
+let getContact (getContactFromDb: int -> Task<Option<RegisteredContact>>) id next (ctx: HttpContext) = 
     task {
         try
             let! contact = getContactFromDb(id)
@@ -33,13 +33,19 @@ let getContact (getContactFromDb: int -> Task<Option<Contact>>) id next (ctx: Ht
             return! SERVICE_UNAVAILABLE "Database not available" next ctx        
     }
 
-let register (addContact: ContactRequest -> Task<Contact>) next (ctx: HttpContext) =
+let register (addContact: Contact -> Task<RegisteredContact>) next (ctx: HttpContext) =
     task {
         try
-            let! registerRequest = ctx.BindJsonAsync<ContactRequest>()
+            let! registerRequest = ctx.BindJsonAsync<Contact>()
 
-            let! newContact = addContact registerRequest
-            return! Successful.OK(newContact) next ctx
+            let validationResult, errors = Validation.validateContact registerRequest
+
+            match validationResult with
+                | true ->
+                    let! newContact = addContact registerRequest
+                    return! Successful.OK(newContact) next ctx
+                | false -> return! RequestErrors.BAD_REQUEST errors next ctx
+
         with exn ->
             let logger = ctx.GetLogger "Contacts"
             logger.LogError (EventId(), exn, "SERVICE_UNAVAILABLE")
