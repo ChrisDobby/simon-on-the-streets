@@ -8,12 +8,17 @@ open Microsoft.Extensions.DependencyInjection
 
 open Giraffe
 
+let inMemoryDataFunctions =
+    (fun () -> task { return Db.InMemory.Data.getContacts () }),
+    (fun id -> task { return Db.InMemory.Data.getContact id }),
+    (fun reg -> task { return Db.InMemory.Data.addContact reg })
+
 let clientPath = Path.Combine("..","Client") |> Path.GetFullPath
 let port = 8085us
 
 let configureApp  (app : IApplicationBuilder) =
   app.UseStaticFiles()
-     .UseGiraffe(Web.App clientPath)
+     .UseGiraffe(Web.App clientPath inMemoryDataFunctions)
 
 let configureServices (services : IServiceCollection) =
     services.AddGiraffe() |> ignore

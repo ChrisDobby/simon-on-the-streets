@@ -2,14 +2,14 @@ namespace Domain
 
 open System
 
-type Registration = 
+type Contact = 
     {
         Id: int
         Name: string
         Registered: DateTime
     }
 
-type RegistrationRequest = 
+type ContactRequest = 
     {
         Name: string
     }

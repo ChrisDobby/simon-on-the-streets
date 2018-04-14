@@ -6,9 +6,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Shared\Domain.fs" />
-    <Compile Include="db\inMemory\Data.fs" />
-    <Compile Include="Registrations.fs" />
+    <Compile Include="Contacts.fs" />
     <Compile Include="Web.fs" />
+    <Compile Include="db\inMemory\Data.fs" />
     <Compile Include="Server.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

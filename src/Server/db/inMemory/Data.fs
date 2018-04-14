@@ -3,27 +3,27 @@ module Db.InMemory.Data
 open Domain
 open System
 
-let mutable registrations : Registration list = []
+let mutable contacts : Contact list = []
 
-let getRegistrations () = registrations
+let getContacts () = contacts
 
-let getRegistration id = 
-    let filteredRegistration registrations =
-        match registrations with
+let getContact id = 
+    let filteredContact contacts =
+        match contacts with
             | [] -> None
-            | _ -> Some(registrations |> List.exactlyOne)
+            | _ -> Some(contacts |> List.exactlyOne)
 
-    filteredRegistration
-        (registrations |> 
+    filteredContact
+        (contacts |> 
                 List.filter(fun reg -> reg.Id = id))
 
 let nextId () = 
-    match registrations with
+    match contacts with
         | [] -> 1
-        | _ -> (registrations |> List.map(fun reg -> reg.Id) |> List.max) + 1
+        | _ -> (contacts |> List.map(fun reg -> reg.Id) |> List.max) + 1
 
-let addRegistration (registration: RegistrationRequest) = 
-    let newRegistration = { Id = nextId(); Name = registration.Name; Registered = DateTime.Now }
-    registrations <- newRegistration::registrations
+let addContact (contact: ContactRequest) = 
+    let newContact = { Id = nextId(); Name = contact.Name; Registered = DateTime.Now }
+    contacts <- newContact::contacts
 
-    newRegistration
+    newContact

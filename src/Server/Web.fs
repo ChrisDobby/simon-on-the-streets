@@ -3,27 +3,23 @@ module Web
 open Giraffe
 open RequestErrors
 
-let inMemoryDataFunctions =
-    (fun () -> task { return Db.InMemory.Data.getRegistrations () }),
-    (fun id -> task { return Db.InMemory.Data.getRegistration id }),
-    (fun reg -> task { return Db.InMemory.Data.addRegistration reg })
 
-let App root =
+let App root database =
     let notFound = NOT_FOUND "Page not found"
 
-    let getAllRegistrations, getRegistration, addRegistration = inMemoryDataFunctions;
+    let getAllContacts, getContact, addContact = database;
 
-    let x id = Registrations.getRegistration getRegistration id
+    let x id = Contacts.getContact getContact id
 
     choose [
             GET >=> choose [
                 route "/" >=> (htmlFile (System.IO.Path.Combine(root,"index.html")))
-                route "/api/registrations" >=> (Registrations.getAllRegistrations getAllRegistrations)
-                routef "/api/registrations/%i" (fun id -> (Registrations.getRegistration getRegistration id))
+                route "/api/contacts" >=> (Contacts.getAllContacts getAllContacts)
+                routef "/api/contacts/%i" (fun id -> (Contacts.getContact getContact id))
             ]
 
             POST >=> choose [
-                route "/api/registrations" >=> (Registrations.register addRegistration)
+                route "/api/contacts" >=> (Contacts.register addContact)
             ]
 
             RequestErrors.notFound (text "Not Found")
