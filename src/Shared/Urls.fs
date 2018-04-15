@@ -7,4 +7,6 @@ module PageUrls =
 module APIUrls =
   [<Literal>]
   let Contacts = "/api/contacts"
+  [<Literal>]
+  let AddConfig = "/api/contacts/add/config"
   

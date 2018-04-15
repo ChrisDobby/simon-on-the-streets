@@ -20,6 +20,12 @@ type RegisteredContact =
         Contact: Contact
     }
 
+type AddContactConfig = 
+    {
+        PreviousLocations: string list
+        Services: string list
+    }
+
 module Services = 
     let available = [
         "A & E"

@@ -32,3 +32,8 @@ let addContact (contact: Contact) =
     contacts <- newContact::contacts
 
     newContact
+
+let getPreviousContacts () =
+    contacts |> 
+    List.map(fun contact -> contact.Contact.Location) |>
+    List.distinct

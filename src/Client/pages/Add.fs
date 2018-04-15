@@ -9,9 +9,11 @@ open Fable.Import
 
 type Model = {
     LoadingConfig: bool
-    Name: string
-    Location: string
-    Service: string
+    Config: AddContactConfig option
+    ConfigErrorMessage: string option
+    Name: string option
+    Location: string option
+    Service: string option
     SupportOffered: bool
     SupportAccepted: bool
     Intervention: string option
@@ -19,22 +21,37 @@ type Model = {
 }
 
 type Message =
-    | FetchedConfig
+    | FetchedConfig of AddContactConfig
+    | FetchError of exn
+
+let getConfig () =
+    promise {
+        return! Fetch.fetchAs<AddContactConfig> Urls.APIUrls.AddConfig []
+    }
+
+let loadConfigCmd () = 
+    Cmd.ofPromise getConfig () FetchedConfig FetchError
 
 let init () = 
     {
         LoadingConfig = true
-        Name = ""
-        Location = ""
-        Service = ""
+        Config = None
+        ConfigErrorMessage = None
+        Name = None
+        Location = None
+        Service = None
         SupportOffered = false
         SupportAccepted = false
         Intervention = None
         OtherInformation = None
-    }, Cmd.none
+    }, loadConfigCmd ()
 
 let update msg (model: Model) =
-    model, Cmd.none
+    match msg with
+        | FetchedConfig config -> 
+            { model with Config = Some config; LoadingConfig = false }, Cmd.none
+        | FetchError ex -> 
+            { model with ConfigErrorMessage = Some ex.Message; LoadingConfig = false }, Cmd.none
 
 let view model dispatch = 
     div [Style Styles.flexFill] [

@@ -8,7 +8,7 @@ open Urls
 let App root database =
     let notFound = NOT_FOUND "Page not found"
 
-    let getAllContacts, getContact, addContact = database;
+    let getAllContacts, getContact, addContact, getPreviousLocations = database;
 
     let x id = Contacts.getContact getContact id
 
@@ -17,6 +17,7 @@ let App root database =
                 route PageUrls.Home >=> (htmlFile (System.IO.Path.Combine(root,"index.html")))
                 route APIUrls.Contacts >=> (Contacts.getAllContacts getAllContacts)
                 routef "/api/contacts/%i" (fun id -> (Contacts.getContact getContact id))
+                route APIUrls.AddConfig >=> (Contacts.getAddConfig getPreviousLocations)
             ]
 
             POST >=> choose [

@@ -13,7 +13,9 @@ open Giraffe.Serialization.Json
 let inMemoryDataFunctions =
     (fun () -> task { return Db.InMemory.Data.getContacts () }),
     (fun id -> task { return Db.InMemory.Data.getContact id }),
-    (fun reg -> task { return Db.InMemory.Data.addContact reg })
+    (fun reg -> task { return Db.InMemory.Data.addContact reg }),
+    (fun () -> task { return Db.InMemory.Data.getPreviousContacts () })
+
 
 let clientPath =
     // did we start from server folder?

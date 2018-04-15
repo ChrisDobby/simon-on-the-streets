@@ -51,3 +51,14 @@ let register (addContact: Contact -> Task<RegisteredContact>) next (ctx: HttpCon
             logger.LogError (EventId(), exn, "SERVICE_UNAVAILABLE")
             return! SERVICE_UNAVAILABLE "Database not available" next ctx
     }
+
+let getAddConfig (getPreviousLocationsFromDb: unit -> Task<string list>) next (ctx: HttpContext) =
+    task {
+        try
+            let! previousLocations = getPreviousLocationsFromDb ()
+            return! Successful.OK(ctx.WriteJsonAsync { PreviousLocations = previousLocations; Services = Services.available }) next ctx
+        with exn ->
+            let logger = ctx.GetLogger "Contacts"
+            logger.LogError (EventId(), exn, "SERVICE_UNAVAILABLE")
+            return! SERVICE_UNAVAILABLE "Database not available" next ctx        
+    }
