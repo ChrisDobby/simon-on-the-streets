@@ -11,6 +11,7 @@
     <Compile Include="components/Header.fs" />
     <Compile Include="components/ContactList.fs" />
     <Compile Include="pages/Home.fs" />
+    <Compile Include="pages/Add.fs" />
     <Compile Include="Views.fs" />
     <Compile Include="Client.fs" />
   </ItemGroup>

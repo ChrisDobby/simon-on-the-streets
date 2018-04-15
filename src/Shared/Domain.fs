@@ -59,7 +59,7 @@ module Validation =
         let validService (valid, errors) = 
             let serviceValid = 
                 not (String.IsNullOrEmpty(contact.Service)) &&
-                Services.available |> List.contains(contact.Service)
+                Services.available |> List.map (fun service -> service.ToLower()) |> List.contains(contact.Service.ToLower())
 
             (valid && serviceValid, if serviceValid then errors else "Valid service is required"::errors)
 

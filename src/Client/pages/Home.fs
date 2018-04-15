@@ -5,7 +5,7 @@ open Elmish
 open Fable.Helpers.React
 open Fable.Helpers.React.Props
 open Fable.PowerPack
-open Fable.Import
+open Elmish.Browser.Navigation
 
 type Model = {
     Contacts: RegisteredContact list
@@ -22,6 +22,9 @@ let getContacts () =
     promise {
         return! Fetch.fetchAs<RegisteredContact list> Urls.APIUrls.Contacts []
     }
+    
+let addContactClick _ =
+    Navigation.newUrl (Pages.toPath Pages.AddContact) |> List.map (fun f -> f ignore) |> ignore
 
 let loadContactsCmd () = 
     Cmd.ofPromise getContacts () FetchedContacts FetchError
@@ -55,4 +58,9 @@ let view model dispatch =
                             ]
                     | _ -> yield ContactList.view model.Contacts
                 ]
+        div[ClassName "fixed-action-btn"] [
+            button [ClassName "btn-floating btn-large green"; Href (Pages.toPath Pages.AddContact); OnClick addContactClick] [
+                i [ClassName "fa fa-plus"] []
+                ]
+            ]
     ]
