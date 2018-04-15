@@ -15,7 +15,17 @@ let inMemoryDataFunctions =
     (fun id -> task { return Db.InMemory.Data.getContact id }),
     (fun reg -> task { return Db.InMemory.Data.addContact reg })
 
-let clientPath = Path.Combine("..","Client") |> Path.GetFullPath
+let clientPath =
+    // did we start from server folder?
+    let devPath = Path.Combine("..","Client")
+    if Directory.Exists devPath then devPath
+    else
+        // maybe we are in root of project?
+        let devPath = Path.Combine("src","Client")
+        if Directory.Exists devPath then devPath
+        else @"./client"
+    |> Path.GetFullPath
+
 let port = 8085us
 
 let configureApp  (app : IApplicationBuilder) =
