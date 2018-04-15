@@ -6,6 +6,7 @@ type Contact =
     {
         Name: string
         Location: string
+        Service: string
         SupportOffered: bool
         SupportAccepted: bool
         Intervention: string
@@ -19,6 +20,32 @@ type RegisteredContact =
         Contact: Contact
     }
 
+module Services = 
+    let available = [
+        "A & E"
+        "Alcohol"
+        "Benefits"
+        "Court"
+        "Dental"
+        "Drugs"
+        "Education/Training"
+        "Family contact"
+        "Financial"
+        "Food"
+        "General support"
+        "GP"
+        "Hospital visits"
+        "Housing"
+        "Mental health"
+        "Outpatients"
+        "Police"
+        "Prison visits"
+        "Probation"
+        "Sexual health"
+        "Solicitors"
+        "Utilities"
+        ]
+
 module Validation =
     let validateContact contact =
         let validName (valid, errors) = 
@@ -29,6 +56,14 @@ module Validation =
             let locationValid = not (String.IsNullOrEmpty(contact.Location))
             (valid && locationValid, if locationValid then errors else "Location is required"::errors)
 
+        let validService (valid, errors) = 
+            let serviceValid = 
+                not (String.IsNullOrEmpty(contact.Service)) &&
+                Services.available |> List.contains(contact.Service)
+
+            (valid && serviceValid, if serviceValid then errors else "Valid service is required"::errors)
+
         (true, []) |>
         validName  |>
-        validLocation
+        validLocation |>
+        validService

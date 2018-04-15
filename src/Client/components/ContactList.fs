@@ -11,6 +11,7 @@ let contactCard { reg = reg }  =
         div [ClassName "card-content"] [
             span [ClassName "card-title"] [str reg.Contact.Name]
             h6 [] [str reg.Contact.Location]
+            h6 [] [str reg.Contact.Service]
             str (reg.Registered.ToString("dd-MMM-yyyy hh:mm"))
             ]
         ]
