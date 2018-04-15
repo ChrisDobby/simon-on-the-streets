@@ -4,10 +4,12 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Urls.fs" />
     <Compile Include="..\Shared\Domain.fs" />
     <Compile Include="Pages.fs" />
     <Compile Include="styles/Styles.fs" />
     <Compile Include="components/Header.fs" />
+    <Compile Include="components/ContactList.fs" />
     <Compile Include="pages/Home.fs" />
     <Compile Include="Views.fs" />
     <Compile Include="Client.fs" />

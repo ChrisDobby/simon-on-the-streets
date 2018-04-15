@@ -2,6 +2,7 @@ module Web
 
 open Giraffe
 open RequestErrors
+open Urls
 
 
 let App root database =
@@ -13,13 +14,13 @@ let App root database =
 
     choose [
             GET >=> choose [
-                route "/" >=> (htmlFile (System.IO.Path.Combine(root,"index.html")))
-                route "/api/contacts" >=> (Contacts.getAllContacts getAllContacts)
+                route PageUrls.Home >=> (htmlFile (System.IO.Path.Combine(root,"index.html")))
+                route APIUrls.Contacts >=> (Contacts.getAllContacts getAllContacts)
                 routef "/api/contacts/%i" (fun id -> (Contacts.getContact getContact id))
             ]
 
             POST >=> choose [
-                route "/api/contacts" >=> (Contacts.register addContact)
+                route APIUrls.Contacts >=> (Contacts.register addContact)
             ]
 
             RequestErrors.notFound (text "Not Found")

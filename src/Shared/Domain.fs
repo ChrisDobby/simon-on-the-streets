@@ -29,5 +29,6 @@ module Validation =
             let locationValid = not (String.IsNullOrEmpty(contact.Location))
             (valid && locationValid, if locationValid then errors else "Location is required"::errors)
 
-        validName (true, []) |> 
+        (true, []) |>
+        validName  |>
         validLocation

@@ -5,8 +5,10 @@ open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.DependencyInjection
+open Newtonsoft.Json
 
 open Giraffe
+open Giraffe.Serialization.Json
 
 let inMemoryDataFunctions =
     (fun () -> task { return Db.InMemory.Data.getContacts () }),
@@ -22,6 +24,12 @@ let configureApp  (app : IApplicationBuilder) =
 
 let configureServices (services : IServiceCollection) =
     services.AddGiraffe() |> ignore
+
+    let fableJsonSettings = JsonSerializerSettings()
+    fableJsonSettings.Converters.Add(Fable.JsonConverter())
+
+    services.AddSingleton<IJsonSerializer>(
+        NewtonsoftJsonSerializer(fableJsonSettings)) |> ignore
 
 WebHost
   .CreateDefaultBuilder()

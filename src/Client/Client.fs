@@ -10,21 +10,29 @@ open Views
 let handleNotFound (model: Model) =
     ( model, Navigation.modifyUrl (toPath Page.Home) )
 
+let homePage () =
+    let m, cmd = Home.init ()
+    { PageModel = HomePage m }, Cmd.map HomePageMsg cmd
+
 let urlUpdate (result:Page option) (model: Model) =
     match result with
     | None ->
         handleNotFound model
 
     | Some Home ->
-        { model with PageModel = HomePage }, Cmd.none
+        let m, cmd = Home.init ()
+        { model with PageModel = HomePage m }, Cmd.map HomePageMsg cmd
 
 let init result =
   match result with
-    | None -> { PageModel = HomePage }, Cmd.none
-    | Some Home -> { PageModel = HomePage }, Cmd.none
+    | None -> homePage()
+    | Some Home -> homePage()
 
 let update msg model =
-  model, Cmd.none
+    match msg, model.PageModel with
+        | HomePageMsg msg, HomePage m -> 
+            let m, cmd = Home.update msg m
+            { model with PageModel = HomePage m }, Cmd.map HomePageMsg cmd
   
 #if DEBUG
 open Elmish.Debug

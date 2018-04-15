@@ -5,6 +5,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\Shared\Urls.fs" />
     <Compile Include="..\Shared\Domain.fs" />
     <Compile Include="Contacts.fs" />
     <Compile Include="Web.fs" />

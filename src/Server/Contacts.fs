@@ -11,7 +11,7 @@ let getAllContacts (getContactsFromDB: unit -> Task<RegisteredContact list>) nex
     task {
         try
             let! contacts = getContactsFromDB ()
-            return! Successful.OK (contacts) next ctx
+            return! Successful.OK(ctx.WriteJsonAsync contacts) next ctx
         with exn ->
             let logger = ctx.GetLogger "Contacts"
             logger.LogError (EventId(), exn, "SERVICE_UNAVAILABLE")
@@ -24,7 +24,7 @@ let getContact (getContactFromDb: int -> Task<Option<RegisteredContact>>) id nex
             let! contact = getContactFromDb(id)
 
             match contact with
-                | Some(reg) -> return! Successful.OK (reg) next ctx
+                | Some(reg) -> return! Successful.OK(ctx.WriteJsonAsync reg) next ctx
                 | _ -> return! RequestErrors.NOT_FOUND "contact not found" next ctx
 
         with exn ->
@@ -43,7 +43,7 @@ let register (addContact: Contact -> Task<RegisteredContact>) next (ctx: HttpCon
             match validationResult with
                 | true ->
                     let! newContact = addContact registerRequest
-                    return! Successful.OK(newContact) next ctx
+                    return! Successful.OK(ctx.WriteJsonAsync newContact) next ctx
                 | false -> return! RequestErrors.BAD_REQUEST errors next ctx
 
         with exn ->
