@@ -19,7 +19,7 @@ open Fable.Helpers.React.Props
 let viewPage model dispatch =
     match model.PageModel with 
         | HomePage m -> Home.view m dispatch
-        | AddContactPage m -> Add.view m dispatch
+        | AddContactPage m -> Add.view m (AddPageMsg >> dispatch)
 
 let view model dispatch = 
     div [Style Styles.flex]

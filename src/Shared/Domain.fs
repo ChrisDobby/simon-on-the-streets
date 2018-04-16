@@ -9,8 +9,8 @@ type Contact =
         Service: string
         SupportOffered: bool
         SupportAccepted: bool
-        Intervention: string
-        OtherInformation: string
+        Intervention: string option
+        OtherInformation: string option
     }
 
 type RegisteredContact = 
@@ -53,23 +53,27 @@ module Services =
         ]
 
 module Validation =
+    let private stringIsFilledIn = function
+        | None -> false
+        | Some s -> not (String.IsNullOrEmpty(s))
+
+    let validName name (valid, errors) = 
+        let nameValid = stringIsFilledIn name
+        (valid && nameValid, if nameValid then errors else "Name is required"::errors)
+
+    let validLocation location (valid, errors) = 
+        let locationValid = stringIsFilledIn location
+        (valid && locationValid, if locationValid then errors else "Location is required"::errors)
+
+    let validService service (valid, errors) = 
+        let serviceValid = 
+            stringIsFilledIn service &&
+            Services.available |> List.map (fun service -> service.ToLower()) |> List.contains(service.Value.ToLower())
+
+        (valid && serviceValid, if serviceValid then errors else "Valid service is required"::errors)
+
     let validateContact contact =
-        let validName (valid, errors) = 
-            let nameValid = not (String.IsNullOrEmpty(contact.Name))
-            (valid && nameValid, if nameValid then errors else "Name is required"::errors)
-
-        let validLocation (valid, errors) = 
-            let locationValid = not (String.IsNullOrEmpty(contact.Location))
-            (valid && locationValid, if locationValid then errors else "Location is required"::errors)
-
-        let validService (valid, errors) = 
-            let serviceValid = 
-                not (String.IsNullOrEmpty(contact.Service)) &&
-                Services.available |> List.map (fun service -> service.ToLower()) |> List.contains(contact.Service.ToLower())
-
-            (valid && serviceValid, if serviceValid then errors else "Valid service is required"::errors)
-
         (true, []) |>
-        validName  |>
-        validLocation |>
-        validService
+        validName (Some contact.Name) |>
+        validLocation (Some contact.Location) |>
+        validService (Some contact.Service)
