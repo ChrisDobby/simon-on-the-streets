@@ -1,16 +1,20 @@
 module Web
 
 open Giraffe
-open RequestErrors
 open Urls
+open Microsoft.AspNetCore.Http
 
 
 let App root database =
-    let notFound = NOT_FOUND "Page not found"
-
     let getAllContacts, getContact, addContact, getPreviousLocations = database;
 
-    let x id = Contacts.getContact getContact id
+    let apiPathPrefix = PathString("/api")
+    let notfound: HttpHandler =
+        fun next ctx ->
+            if ctx.Request.Path.StartsWithSegments(apiPathPrefix) then
+                RequestErrors.NOT_FOUND "Page not found" next ctx
+            else
+                (htmlFile (System.IO.Path.Combine(root,"index.html"))) next ctx
 
     choose [
             GET >=> choose [
@@ -24,5 +28,5 @@ let App root database =
                 route APIUrls.Contacts >=> (Contacts.register addContact)
             ]
 
-            RequestErrors.notFound (text "Not Found")
+            notfound
     ]
