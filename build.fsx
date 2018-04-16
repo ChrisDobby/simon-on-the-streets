@@ -107,8 +107,6 @@ let dockerPassword = getBuildParam "DockerPassword"
 let dockerLoginServer = getBuildParam "DockerLoginServer"
 let dockerImageName = getBuildParam "DockerImageName"
 
-let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
-
 Target "SetReleaseNotes" (fun _ ->
     let lines = [
             "module internal ReleaseNotes"
