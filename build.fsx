@@ -154,20 +154,20 @@ Target "CreateDockerImage" (fun _ ->
     if result <> 0 then failwith "Docker build failed"
 )
 
-Target "Deploy" (fun _ -> ()
-    // let result =
-    //     ExecProcess (fun info ->
-    //         info.FileName <- "docker"
-    //         info.WorkingDirectory <- deployDir
-    //         info.Arguments <- sprintf "login %s --username \"%s\" --password \"%s\"" dockerLoginServer dockerUser dockerPassword) TimeSpan.MaxValue
-    // if result <> 0 then failwith "Docker login failed"
+Target "Deploy" (fun _ ->
+    let result =
+        ExecProcess (fun info ->
+            info.FileName <- "docker"
+            info.WorkingDirectory <- deployDir
+            info.Arguments <- sprintf "login %s --username \"%s\" --password \"%s\"" dockerLoginServer dockerUser dockerPassword) TimeSpan.MaxValue
+    if result <> 0 then failwith "Docker login failed"
 
-    // let result =
-    //     ExecProcess (fun info ->
-    //         info.FileName <- "docker"
-    //         info.WorkingDirectory <- deployDir
-    //         info.Arguments <- sprintf "push %s/%s" dockerUser dockerImageName) TimeSpan.MaxValue
-    // if result <> 0 then failwith "Docker push failed"
+    let result =
+        ExecProcess (fun info ->
+            info.FileName <- "docker"
+            info.WorkingDirectory <- deployDir
+            info.Arguments <- sprintf "push %s/%s" dockerUser dockerImageName) TimeSpan.MaxValue
+    if result <> 0 then failwith "Docker push failed"
 )
 
 "Clean"
