@@ -8,6 +8,6 @@ let view =
       [
         div [ClassName "nav-wrapper"] 
           [        
-            a [ClassName "brand-logo"; Href "#"] [img [Src "/images/simon-header.png"]]
+            a [ClassName "brand-logo"; Href "#"] [img [Src "/Images/simon-header.png"]]
           ]
       ]
