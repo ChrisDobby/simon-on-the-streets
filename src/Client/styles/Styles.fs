@@ -13,4 +13,8 @@ let flexFill = [fillVertical; Flex "1"; OverflowX "hidden"; OverflowY "auto"]
 
 let errorMessage = [errorTextColor]
 
+let contactList = [MarginTop "10px"]
+
 let contactCard = [Margin "4px"]
+
+let contactIcon = [FontSize "50px"]
