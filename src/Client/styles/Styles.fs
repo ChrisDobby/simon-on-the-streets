@@ -15,6 +15,8 @@ let errorMessage = [errorTextColor]
 
 let contactList = [MarginTop "10px"]
 
-let contactCard = [Margin "4px"]
+let contactCard = [Margin "4px"; Fable.Helpers.React.Props.Color "black"]
 
 let contactIcon = [FontSize "50px"]
+
+let boldText = FontWeight "bold"

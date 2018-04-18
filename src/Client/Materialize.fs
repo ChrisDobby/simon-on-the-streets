@@ -25,3 +25,6 @@ let initialiseAutocompleteFromList (selector: string) (options: string list) : u
 
 [<Emit("window['$'](document).ready(function() { M.AutoInit(); })")>]
 let autoInit () : unit = jsNative
+
+[<Emit("window['$'](document).ready(function() { var elem = document.querySelector($0);M.Modal.init(elem); })")>]
+let initialiseModal (selector: string) = jsNative
