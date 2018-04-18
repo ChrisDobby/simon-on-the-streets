@@ -1,10 +1,13 @@
 module internal ReleaseNotes
 
-let Version = "0.0.21"
+let Version = "0.0.22"
 
 let IsPrerelease = false
 
 let Notes = """
+### 0.0.22 - 2018-04-18
+* Added more info to the contact card and popup.
+
 ### 0.0.21 - 2018-04-16
 * All page routes go to application.  Correct image on the nav bar.
 
